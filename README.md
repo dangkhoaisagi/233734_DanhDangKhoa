@@ -37,8 +37,14 @@ Xây dựng một ứng dụng quản lý sách đơn giản, gồm:
 ├── frontend/
 │   ├── Dockerfile
 │   ├── index.html
-│   ├── styles.css
-│   └── script.js
+│   ├── nginx.conf
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── styles.css
+│   └── vite.config.js
 ├── docker-compose.yml
 ├── .gitignore
 ├── README.md
@@ -47,7 +53,7 @@ Xây dựng một ứng dụng quản lý sách đơn giản, gồm:
 
 ## 4. Công nghệ sử dụng
 
-- Frontend: HTML, CSS, JavaScript
+- Frontend: React, Vite, CSS
 - Backend: Node.js, Express
 - Database: MongoDB
 - Container: Docker, Docker Compose
@@ -78,13 +84,13 @@ Truy cập API tại:
 - `http://localhost:5000/api/books`
 
 ```bash
-# frontend
+# frontend (mở terminal riêng)
 cd frontend
-python -m http.server 8080
+npm install
+npm run dev
 ```
 
-Truy cập frontend tại:
-- `http://localhost:8080`
+Truy cập frontend tại `http://localhost:5173`. Vite chuyển tiếp `/api` đến backend đang chạy tại `http://localhost:5000`.
 
 ### 5.2 Chạy bằng Docker Compose
 
@@ -103,6 +109,8 @@ docker compose --env-file backend/.env up --build
 - Frontend: `http://localhost`
 - Backend: `http://localhost:5000`
 - MongoDB: `mongodb://localhost:27017/233734_DanhDangKhoa`
+
+Frontend React có danh sách sách, tìm kiếm theo từ khóa, xem chi tiết, thêm, cập nhật và xóa sách. Khi triển khai frontend độc lập, đặt biến build `VITE_API_URL` thành URL backend kèm `/api` (ví dụ `https://api-example.onrender.com/api`). Docker Compose dùng Nginx chuyển tiếp `/api` tới dịch vụ backend.
 
 ## 6. Cấu trúc dữ liệu MongoDB
 
@@ -141,6 +149,13 @@ Database `233734_DanhDangKhoa`, collection `books`. Mỗi tài liệu có các t
 - `POST /api/books` → thêm sách mới (gửi đủ các trường theo schema)
 - `PUT /api/books/:bookId` → cập nhật một hoặc nhiều trường sách
 - `DELETE /api/books/:bookId` → xóa sách
+
+## 10. Chức năng frontend (Câu 4)
+
+- Hiển thị danh sách sách và thông tin chính
+- Tìm kiếm theo từ khóa
+- Xem chi tiết, thêm, cập nhật và xóa sách
+- Hiển thị trạng thái tải, lỗi, kết quả thao tác và trạng thái danh sách trống
 
 ---
 
