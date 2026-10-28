@@ -175,6 +175,24 @@ docker push dangkhoaisagi/backend:latest
 
 Đường dẫn image để nộp: `https://hub.docker.com/r/dangkhoaisagi/backend` (tag `latest`).
 
+## 12. Triển khai Render (Câu 7)
+
+File [render.yaml](./render.yaml) định nghĩa hai dịch vụ tại Singapore:
+
+- `api-233734`: chạy backend image `dangkhoaisagi/backend:latest`; Render yêu cầu nhập `MONGODB_URI` bí mật khi tạo Blueprint.
+- `web-233734`: Static Site build từ React (`frontend`, `npm ci && npm run build`, publish `dist`). URL backend được lấy tự động từ host của `api-233734`.
+
+Để triển khai:
+
+1. Đẩy commit mới nhất lên GitHub.
+2. Đăng nhập Render, chọn **New → Blueprint** và kết nối repo `dangkhoaisagi/233734_DanhDangKhoa`.
+3. Khi Render hỏi `MONGODB_URI`, nhập Atlas URI đã kiểm tra hoạt động; không commit URI vào repo.
+4. Chọn tạo/deploy các dịch vụ theo `render.yaml` và đợi cả hai deploy thành công.
+5. Mở `web-233734.onrender.com`; thử tìm kiếm, xem chi tiết, thêm, sửa và xóa sách. Kiểm tra API tại `api-233734.onrender.com/api/health`.
+6. Nếu backend không kết nối được Atlas, thêm các outbound IP của web service Render vào Atlas **Network Access**; không cần đưa thông tin xác thực vào frontend.
+
+Render tạo URL chính xác cho từng service trong Dashboard; dùng URL đó để nộp thay vì tự đoán nếu tên miền đã được dùng.
+
 ---
 
 Bài thực hành hiện có backend, frontend và cấu hình kết nối MongoDB. Cần tạo cluster/user/IP allowlist trên Atlas và điền URI bí mật vào `backend/.env` để kết nối cơ sở dữ liệu.

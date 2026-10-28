@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: api-233734
+    runtime: image
+    image:
+      url: docker.io/dangkhoaisagi/backend:latest
+    region: singapore
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+
+  - type: web
+    name: web-233734
+    runtime: static
+    rootDir: frontend
+    region: singapore
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: api-233734
+          property: host

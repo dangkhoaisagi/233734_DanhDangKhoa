@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
+const configuredApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+const apiOrigin = configuredApiUrl
+  ? (/^https?:\/\//i.test(configuredApiUrl) ? configuredApiUrl : `https://${configuredApiUrl}`)
+  : '';
+const API_BASE_URL = apiOrigin
+  ? `${apiOrigin.replace(/\/api$/i, '')}/api`
+  : '/api';
 const EMPTY_BOOK = {
   bookId: '',
   title: '',
