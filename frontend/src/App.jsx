@@ -1,8 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 
 const configuredApiUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
-const apiOrigin = configuredApiUrl
+const configuredApiOrigin = configuredApiUrl
   ? (/^https?:\/\//i.test(configuredApiUrl) ? configuredApiUrl : `https://${configuredApiUrl}`)
+  : '';
+const apiOrigin = configuredApiOrigin
+  ? (() => {
+      const url = new URL(configuredApiOrigin);
+      if (!url.hostname.includes('.') && url.hostname !== 'localhost') {
+        url.hostname = `${url.hostname}.onrender.com`;
+      }
+      return url.origin;
+    })()
   : '';
 const API_BASE_URL = apiOrigin
   ? `${apiOrigin.replace(/\/api$/i, '')}/api`
