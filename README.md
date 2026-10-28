@@ -157,6 +157,24 @@ Database `233734_DanhDangKhoa`, collection `books`. Mỗi tài liệu có các t
 - Xem chi tiết, thêm, cập nhật và xóa sách
 - Hiển thị trạng thái tải, lỗi, kết quả thao tác và trạng thái danh sách trống
 
+## 11. Đóng gói và đẩy backend image (Câu 5)
+
+Backend image sử dụng tên `dangkhoaisagi/backend:latest`. File `backend/.dockerignore` loại trừ `.env` và `node_modules`; thông tin kết nối MongoDB chỉ được truyền lúc chạy container, không nằm trong image.
+
+Mở Docker Desktop và đăng nhập Docker Hub (chạy `docker login -u dangkhoaisagi`; nhập mật khẩu/token khi Docker hỏi, không thêm vào lệnh). Đảm bảo `backend/.env` có `PORT=5000` và `MONGODB_URI` hợp lệ. Từ thư mục gốc dự án thực hiện:
+
+```powershell
+docker build -t dangkhoaisagi/backend:latest ./backend
+docker run --rm --env-file backend/.env dangkhoaisagi/backend:latest npm run seed
+docker run -d --name 233734-books-api --env-file backend/.env -p 5000:5000 dangkhoaisagi/backend:latest
+docker logs 233734-books-api
+docker push dangkhoaisagi/backend:latest
+```
+
+`backend/.env` chỉ được dùng lúc chạy container và bị loại khỏi build context; không ghi mật khẩu vào lệnh, README, Dockerfile hay Git. Kiểm tra API bằng `http://localhost:5000/api/health` và `http://localhost:5000/api/books`. Dừng container bằng `docker stop 233734-books-api`; xóa container bằng `docker rm 233734-books-api`.
+
+Đường dẫn image để nộp: `https://hub.docker.com/r/dangkhoaisagi/backend` (tag `latest`).
+
 ---
 
 Bài thực hành hiện có backend, frontend và cấu hình kết nối MongoDB. Cần tạo cluster/user/IP allowlist trên Atlas và điền URI bí mật vào `backend/.env` để kết nối cơ sở dữ liệu.
