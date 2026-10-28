@@ -15,7 +15,6 @@ services:
     name: web-233734
     runtime: static
     rootDir: frontend
-    region: singapore
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     envVars:
