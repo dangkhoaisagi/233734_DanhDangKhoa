@@ -13,6 +13,22 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.get('/', (req, res) => {
+  res.json({
+    name: '233734_DanhDangKhoa Books API',
+    status: 'ok',
+    endpoints: {
+      health: 'GET /api/health',
+      listBooks: 'GET /api/books',
+      searchBooks: 'GET /api/books?search=<keyword>',
+      getBook: 'GET /api/books/:bookId',
+      createBook: 'POST /api/books',
+      updateBook: 'PUT /api/books/:bookId',
+      deleteBook: 'DELETE /api/books/:bookId'
+    }
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
