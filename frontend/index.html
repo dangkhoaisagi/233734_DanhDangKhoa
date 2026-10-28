@@ -1,29 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Books Manager</title>
+    <title>Quản lý sách</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="container">
       <header>
-        <h1>Book Management</h1>
+        <h1>Quản lý sách</h1>
       </header>
 
       <section class="form-section">
-        <h2>Add new book</h2>
+        <h2>Thêm sách mới</h2>
         <form id="book-form">
-          <input type="text" id="title" placeholder="Book title" required />
-          <input type="text" id="author" placeholder="Author" required />
-          <input type="number" id="year" placeholder="Publishing year" required />
-          <button type="submit">Add book</button>
+          <input type="text" id="bookId" placeholder="Mã sách" required />
+          <input type="text" id="title" placeholder="Tên sách" required />
+          <input type="text" id="author" placeholder="Tác giả" required />
+          <input type="text" id="category" placeholder="Thể loại" required />
+          <input type="text" id="publisher" placeholder="Nhà xuất bản" required />
+          <input type="number" id="publishYear" placeholder="Năm xuất bản" min="0" required />
+          <input type="text" id="isbn" placeholder="ISBN" required />
+          <input type="number" id="quantity" placeholder="Số lượng" min="0" required />
+          <input type="text" id="description" placeholder="Mô tả sách" required />
+          <button type="submit">Thêm sách</button>
         </form>
       </section>
 
       <section class="book-list-section">
-        <h2>Book list</h2>
+        <h2>Danh sách sách</h2>
         <div id="book-list" class="book-list"></div>
       </section>
     </div>
