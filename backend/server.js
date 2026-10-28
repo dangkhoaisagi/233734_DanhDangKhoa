@@ -22,7 +22,16 @@ app.get('/api/health', (req, res) => {
 
 app.get('/api/books', async (req, res, next) => {
   try {
-    const books = await Book.find().sort({ bookId: 1 });
+    const search = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+    const searchPattern = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const filter = search
+      ? {
+          $or: ['bookId', 'title', 'author', 'category', 'publisher', 'isbn', 'description'].map(
+            (field) => ({ [field]: { $regex: searchPattern, $options: 'i' } })
+          )
+        }
+      : {};
+    const books = await Book.find(filter).sort({ bookId: 1 });
     res.json(books);
   } catch (error) {
     next(error);
@@ -45,8 +54,66 @@ app.get('/api/books/:bookId', async (req, res, next) => {
 
 app.post('/api/books', async (req, res, next) => {
   try {
+    if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
+      return res.status(400).json({ message: 'Request body must be a JSON object.' });
+    }
+
     const book = await Book.create(req.body);
     res.status(201).json(book);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.put('/api/books/:bookId', async (req, res, next) => {
+  try {
+    if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
+      return res.status(400).json({ message: 'Request body must be a JSON object.' });
+    }
+
+    const allowedFields = [
+      'title',
+      'author',
+      'category',
+      'publisher',
+      'publishYear',
+      'isbn',
+      'quantity',
+      'description'
+    ];
+    const updates = Object.fromEntries(
+      Object.entries(req.body).filter(([field]) => allowedFields.includes(field))
+    );
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: 'Provide at least one valid book field to update.' });
+    }
+
+    const book = await Book.findOneAndUpdate(
+      { bookId: req.params.bookId },
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found.' });
+    }
+
+    res.json(book);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.delete('/api/books/:bookId', async (req, res, next) => {
+  try {
+    const book = await Book.findOneAndDelete({ bookId: req.params.bookId });
+
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found.' });
+    }
+
+    res.json({ message: 'Book deleted successfully.', book });
   } catch (error) {
     next(error);
   }
@@ -57,6 +124,10 @@ app.use((req, res) => {
 });
 
 app.use((error, req, res, next) => {
+  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+    return res.status(400).json({ message: 'Request body must contain valid JSON.' });
+  }
+
   if (error.name === 'ValidationError') {
     return res.status(400).json({ message: error.message });
   }

@@ -136,8 +136,11 @@ Database `233734_DanhDangKhoa`, collection `books`. Mỗi tài liệu có các t
 ## 9. Các API mẫu
 
 - `GET /api/health` → kiểm tra trạng thái server
-- `GET /api/books` → lấy danh sách sách
-- `POST /api/books` → thêm sách mới
+- `GET /api/books` → lấy danh sách sách; thêm `?search=cloud` để tìm theo mã, tên, tác giả, thể loại, nhà xuất bản, ISBN hoặc mô tả
+- `GET /api/books/:bookId` → lấy thông tin một sách theo mã
+- `POST /api/books` → thêm sách mới (gửi đủ các trường theo schema)
+- `PUT /api/books/:bookId` → cập nhật một hoặc nhiều trường sách
+- `DELETE /api/books/:bookId` → xóa sách
 
 ---
 
