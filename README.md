@@ -193,6 +193,15 @@ File [render.yaml](./render.yaml) định nghĩa hai dịch vụ tại Singapore
 
 Render tạo URL chính xác cho từng service trong Dashboard; dùng URL đó để nộp thay vì tự đoán nếu tên miền đã được dùng.
 
+## 13. Kiểm tra backend API trên Render (Câu 8)
+
+- Frontend công khai: https://web-233734.onrender.com
+- Backend API công khai: https://api-233734.onrender.com
+- Health check: https://api-233734.onrender.com/api/health
+- Danh sách sách: https://api-233734.onrender.com/api/books
+
+Backend dùng Express CORS để frontend trên domain Render gọi API. Frontend lấy host backend từ biến build `VITE_API_URL` của Render và chuẩn hóa host thành domain `onrender.com`. Đã kiểm tra health check với MongoDB Atlas báo `connected`, preflight CORS, danh sách/tìm kiếm sách và các thao tác tạo, xem, cập nhật, xóa. Bản ghi tạm dùng kiểm thử giao diện/API đã được xóa sau khi xác minh.
+
 ---
 
 Bài thực hành hiện có backend, frontend và cấu hình kết nối MongoDB. Cần tạo cluster/user/IP allowlist trên Atlas và điền URI bí mật vào `backend/.env` để kết nối cơ sở dữ liệu.
