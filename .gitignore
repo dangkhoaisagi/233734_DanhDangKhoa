@@ -5,3 +5,8 @@ build/
 .env.*
 !.env.example
 npm-debug.log*
+.DS_Store
+coverage/
+.vscode/
+*.log
+
